@@ -20,6 +20,44 @@ const defaults = require("lodash/defaults")
 const map = require("lodash/map")
 const get = require("lodash/get")
 
+export class DateRangeFilterInput extends SearchkitComponent<any, any> {
+  refs: {
+    [key: string]: any;
+    dateFromInput: any;
+    dateToInput: any;
+  }
+
+  constructor(props) {
+    super(props)
+    const { fromDate, toDate } = props
+    console.log("PROPS", props)
+  }
+
+  handleDateFinished = (event) => {
+    const { onFinished } = this.props
+    console.log("handleDateFinished")
+    const newState = { fromDate: this.refs.dateFromInput.value, toDate: this.refs.dateToInput.value }
+    onFinished(newState)
+  }
+
+  render() {
+    const { fromDate, toDate } = this.props
+
+    return (
+      <div>
+        <input id="date-from" ref="dateFromInput" defaultValue={fromDate} />
+        <input id="date-to" ref="dateToInput" defaultValue={toDate} />
+        <button id="date-submit" onClick={this.handleDateFinished}>OK</button>
+      </div>
+    )
+  }
+}
+
+
+
+
+
+
 export interface DateRangeFilterProps extends SearchkitComponentProps {
   field:string
   fromDate?:number | string
@@ -38,6 +76,7 @@ export interface DateRangeFilterProps extends SearchkitComponentProps {
 
 export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, any> {
   accessor:DateRangeAccessor
+
 
   static propTypes = defaults({
     field:React.PropTypes.string.isRequired,
@@ -95,18 +134,21 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     }
   }
 
-  componentWillMount() {
-    super.componentWillMount()
+  componentDidMount() {
+    this.setInitialState()
   }
 
-  componentDidUpdate() {
-    const { fromDate, toDate } = this.props
-    this.accessor.state = this.accessor.state.setValue({ fromDate, toDate })
+  setInitialState() {
+    this.accessor.state = this.accessor.state.setValue({
+      fromDate: this.props.initialFromDate,
+      toDate: this.props.initialToDate
+    })
   }
 
   calendarUpdate(newValues) {
     if (!newValues.fromDate && !newValues.toDate) {
       this.accessor.state = this.accessor.state.clear()
+      console.log("Calendar state cleared")
     }
     else {
       console.log("Calendar update! new values:", newValues)
@@ -121,30 +163,7 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   }
 
   getCalendarComponent() {
-    return (props) => {
-      const { fromDate, toDate, onChange, onFinished } = props
-      console.log("PROPS", props)
-
-      const handleFromDateChange = (event) => {
-        const newState = { fromDate: event.target.value, toDate: toDate }
-        onChange(newState)
-      }
-      const handleToDateChange = (event) => {
-        const newState = { fromDate: fromDate, toDate: event.target.value }
-        onChange(newState)
-      }
-      const handleDateFinished = (event) => {
-        const newState = { fromDate: fromDate, toDate: toDate }
-        onFinished(newState)
-      }
-      return (
-        <div>
-          <input id="date-from" onChange={handleFromDateChange} defaultValue={fromDate} />
-          <input id="date-to" onChange={handleToDateChange} defaultValue={toDate} />
-          <button id="date-submit" onClick={handleDateFinished}>OK</button>
-        </div>
-      )
-    }
+    return (DateRangeFilterInput)
   }
 
   render() {
