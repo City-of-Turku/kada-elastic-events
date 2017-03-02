@@ -19,6 +19,7 @@ import {
   RangeFilter,
   ItemHistogramList,
   Layout, LayoutBody, LayoutResults,
+  RangeSliderHistogramInput,
   SideBar,
   Panel,
   ActionBar, ActionBarRow,
@@ -27,6 +28,7 @@ import {
 } from "searchkit";
 
 import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
+import { DateRangeFilter } from './DateRangeFilter'
 
 import "./styles/theme.scss";
 
@@ -89,12 +91,14 @@ export class KadaSearch extends React.Component<any, any> {
                 queryFields={[
                   "title_field^8",
                   "field_lead_paragraph_et^5",
-                  "field_address^13"
+                  "field_address^13",
+                  "field_district^20",
                 ]}
                 prefixQueryFields={[
                   "title_field^8",
                   "field_lead_paragraph_et^5",
-                  "field_address^13"
+                  "field_address^13",
+                  "field_district^20",
                 ]}
               />
 
@@ -138,11 +142,24 @@ export class KadaSearch extends React.Component<any, any> {
                 listComponent={ItemHistogramList}
               />
 
-              <HierarchicalRefinementFilter
-                id="field_event_date_hierarchy"
+              { /*
+
+              See https://www.elastic.co/guide/en/elasticsearch/reference/2.4/common-options.html#date-math
+
+              */ }
+
+              <DateRangeFilter
+                id="field_event_date"
                 title={window.Drupal.t("When")}
-                field="field_event_date_hierarchy"
-                orderKey="field_event_date_hierarchy.order"
+                field="field_event_date.to"
+                fieldOptions={{
+                  type: 'nested',
+                  options: {
+                    path: 'field_event_date'
+                  }
+                }}
+                min={"now/d"}
+                max={"now+90d/d"}
               />
 
             </SideBar>

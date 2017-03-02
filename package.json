@@ -56,6 +56,7 @@
     "null-loader": "^0.1.1",
     "phantomjs": "^1.9.18",
     "phantomjs-polyfill": "0.0.1",
+    "rc-calendar": "^7.6.7",
     "react-datepicker": "^0.39.0",
     "react-router": "^1.0.0",
     "request": "^2.67.0",
