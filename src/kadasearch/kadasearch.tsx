@@ -158,8 +158,6 @@ export class KadaSearch extends React.Component<any, any> {
                     path: 'field_event_date'
                   }
                 }}
-                min={"now/d"}
-                max={"now+90d/d"}
               />
 
             </SideBar>

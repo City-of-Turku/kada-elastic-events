@@ -18,8 +18,8 @@ const get = require("lodash/get")
 export interface DateRangeAccessorOptions {
   title:string
   id:string
-  min:number | string
-  max:number | string
+  fromDate:number | string
+  toDate:number | string
   interval?: number
   field:string,
   loadHistogram?:boolean
@@ -43,24 +43,29 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
     if (this.state.hasValue()) {
       let val:any = this.state.getValue()
       let dateRangeFilter = this.fieldContext.wrapFilter(DateRangeQuery(this.options.field,{
-        gte:val.min, lte:val.max
+        gte:val.fromDate, lte:val.toDate
       }))
       let selectedFilter = {
         name:this.translate(this.options.title),
-        value:`${val.min} - ${val.max}`,
+        value:`${val.fromDate} - ${val.toDate}`,
         id:this.options.id,
         remove:()=> {
           this.state = this.state.clear()
         }
       }
 
-      console.log("DateRangeAccessor has a value and built a shared query:", query)
 
-      return query
+      query = query
         .addFilter(this.key, dateRangeFilter)
         .addSelectedFilter(selectedFilter)
 
+      console.log("✅✅✅ DateRangeAccessor has built a shared query!", query)
+
+      return query
+
     }
+
+    console.log("🛑🛑🛑 DateRangeAccessor has no value so no query got built")
 
     return query
   }
@@ -97,7 +102,7 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       otherFilters,
       this.fieldContext.wrapFilter(
         DateRangeQuery(this.options.field, {
-          gte:this.options.min, lte:this.options.max
+          gte:this.options.fromDate, lte:this.options.toDate
         })
       )
     ])
@@ -109,8 +114,8 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
         "interval":this.getInterval(),
         "min_doc_count":0,
         "extended_bounds":{
-          "min":this.options.min,
-          "max":this.options.max
+          "fromDate":this.options.fromDate,
+          "toDate":this.options.toDate
         }
       })
     } else {

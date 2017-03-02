@@ -15,7 +15,5 @@ export function DateRangeQuery(key, options:DateRangeQueryOptions) {
     }
   }
 
-  console.log("DateRangeQuery created:", query)
-
   return query
 }

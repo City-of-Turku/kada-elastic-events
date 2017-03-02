@@ -22,8 +22,10 @@ const get = require("lodash/get")
 
 export interface DateRangeFilterProps extends SearchkitComponentProps {
   field:string
-  min:number | string
-  max:number | string
+  fromDate?:number | string
+  toDate?:number | string
+  initialFromDate?:number | string
+  initialToDate?:number | string
   id:string
   title:string
   interval?:number
@@ -52,16 +54,9 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
 
   static defaultProps = {
     containerComponent: Panel,
-    calendarComponent: (props) => {
-      let { min, max } = props
-      return (
-        <div>
-          <input id="from" value={min} />
-          <input id="to" value={max} />
-        </div>
-      )
-    },
     showHistogram: true,
+    initialFromDate: 'now/d',
+    initialToDate: 'now+7d/d',
     fieldOptions: {
       type: 'nested',
       options: {
@@ -78,9 +73,17 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   }
 
   defineAccessor() {
-    const { id, title, min, max, field, fieldOptions } = this.props
-    return new DateRangeAccessor(id,{
-      id, min, max, title, field, fieldOptions
+    const {
+      id,
+      title,
+      fromDate,
+      toDate,
+      field,
+      fieldOptions,
+    } = this.props
+
+    return new DateRangeAccessor(id, {
+      id, fromDate, toDate, title, field, fieldOptions
     })
   }
 
@@ -92,11 +95,21 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     }
   }
 
+  componentWillMount() {
+    super.componentWillMount()
+  }
+
+  componentDidUpdate() {
+    const { fromDate, toDate } = this.props
+    this.accessor.state = this.accessor.state.setValue({ fromDate, toDate })
+  }
+
   calendarUpdate(newValues) {
-    console.log("Calendar update! new values:", newValues)
-    if ((newValues.min == this.props.min) && (newValues.max == this.props.max)){
+    if (!newValues.fromDate && !newValues.toDate) {
       this.accessor.state = this.accessor.state.clear()
-    } else {
+    }
+    else {
+      console.log("Calendar update! new values:", newValues)
       this.accessor.state = this.accessor.state.setValue(newValues)
     }
     this.forceUpdate()
@@ -107,24 +120,53 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     this.searchkit.performSearch()
   }
 
+  getCalendarComponent() {
+    return (props) => {
+      const { fromDate, toDate, onChange, onFinished } = props
+      console.log("PROPS", props)
+
+      const handleFromDateChange = (event) => {
+        const newState = { fromDate: event.target.value, toDate: toDate }
+        onChange(newState)
+      }
+      const handleToDateChange = (event) => {
+        const newState = { fromDate: fromDate, toDate: event.target.value }
+        onChange(newState)
+      }
+      const handleDateFinished = (event) => {
+        const newState = { fromDate: fromDate, toDate: toDate }
+        onFinished(newState)
+      }
+      return (
+        <div>
+          <input id="date-from" onChange={handleFromDateChange} defaultValue={fromDate} />
+          <input id="date-to" onChange={handleToDateChange} defaultValue={toDate} />
+          <button id="date-submit" onClick={handleDateFinished}>OK</button>
+        </div>
+      )
+    }
+  }
+
   render() {
     const { id, title, containerComponent, calendarComponent} = this.props
-    // console.log("Rendering DateRangeFilter", this.props)
+    console.log("Rendering DateRangeFilter", this.props)
 
     return renderComponent(containerComponent, {
       title,
       className: id ? `filter--${id}` : undefined,
       disabled: this.accessor.isDisabled()
-    }, this.renderCalendarComponent(calendarComponent))
+    }, this.renderCalendarComponent(this.getCalendarComponent()))
   }
 
   renderCalendarComponent(component: RenderComponentType<any>) {
-    const { min, max } = this.props
+    const { fromDate, toDate, initialFromDate, initialToDate } = this.props
     const state = this.accessor.state.getValue()
+
+    console.log("Rendering calendar component", state)
+
     return renderComponent(component, {
-      min, max,
-      minValue: Number(get(state, "min", min)),
-      maxValue: Number(get(state, "max", max)),
+      fromDate: get(state, "fromDate", initialFromDate),
+      toDate: get(state, "toDate", initialToDate),
       items: this.accessor.getBuckets(),
       onChange: this.calendarUpdate,
       onFinished: this.calendarUpdateAndSearch
