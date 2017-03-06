@@ -29,7 +29,7 @@ const EventListItem = (props) => {
 
   // If there's an url in the index, use it. Otherwise, fall back to Drupal node-id.
   let url = (source.url) ? source.url : '/node/' + result._id
-  let image = (source.field_content_image_et_url) ? (
+  let image = (false && source.field_content_image_et_url) ? (
     <div className="event__image__wrapper">
       <img src={source.field_content_image_et_url} width="231" height="231" alt="" />
     </div>

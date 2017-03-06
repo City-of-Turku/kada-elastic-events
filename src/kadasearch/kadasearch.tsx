@@ -151,7 +151,8 @@ export class KadaSearch extends React.Component<any, any> {
               <DateRangeFilter
                 id="field_event_date"
                 title={window.Drupal.t("When")}
-                field="field_event_date.to"
+                fromDateField="field_event_date.from"
+                toDateField="field_event_date.to"
                 fieldOptions={{
                   type: 'nested',
                   options: {

@@ -1,5 +1,4 @@
 import * as React from "react";
-const RcCalendar = require("rc-calendar")
 
 import {
   SearchkitManager,
@@ -14,23 +13,21 @@ import {
   RangeSliderHistogram, RangeSlider
 } from "searchkit"
 
-import { DateRangeAccessor } from "./accessors/DateRangeAccessor"
+import {
+  defaults,
+  map,
+  get
+} from "lodash"
 
-const defaults = require("lodash/defaults")
-const map = require("lodash/map")
-const get = require("lodash/get")
+const RcCalendar = require("rc-calendar")
+
+import { DateRangeAccessor } from "./accessors/DateRangeAccessor"
 
 export class DateRangeFilterInput extends SearchkitComponent<any, any> {
   refs: {
     [key: string]: any;
     dateFromInput: any;
     dateToInput: any;
-  }
-
-  constructor(props) {
-    super(props)
-    const { fromDate, toDate } = props
-    console.log("PROPS", props)
   }
 
   handleDateFinished = (event) => {
@@ -54,16 +51,11 @@ export class DateRangeFilterInput extends SearchkitComponent<any, any> {
 }
 
 
-
-
-
-
 export interface DateRangeFilterProps extends SearchkitComponentProps {
-  field:string
+  fromDateField:string
+  toDateField:string
   fromDate?:number | string
   toDate?:number | string
-  initialFromDate?:number | string
-  initialToDate?:number | string
   id:string
   title:string
   interval?:number
@@ -73,13 +65,15 @@ export interface DateRangeFilterProps extends SearchkitComponentProps {
 }
 
 
-
 export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, any> {
   accessor:DateRangeAccessor
 
 
   static propTypes = defaults({
-    field:React.PropTypes.string.isRequired,
+    fromDate:React.PropTypes.string,
+    toDate:React.PropTypes.string,
+    fromDateField:React.PropTypes.string.isRequired,
+    toDateField:React.PropTypes.string.isRequired,
     title:React.PropTypes.string.isRequired,
     id:React.PropTypes.string.isRequired,
     containerComponent:RenderComponentPropType,
@@ -94,8 +88,8 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   static defaultProps = {
     containerComponent: Panel,
     showHistogram: true,
-    initialFromDate: 'now/d',
-    initialToDate: 'now+7d/d',
+    fromDate: 'now/d',
+    toDate: 'now+7d/d',
     fieldOptions: {
       type: 'nested',
       options: {
@@ -117,12 +111,19 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
       title,
       fromDate,
       toDate,
-      field,
+      fromDateField,
+      toDateField,
       fieldOptions,
     } = this.props
 
     return new DateRangeAccessor(id, {
-      id, fromDate, toDate, title, field, fieldOptions
+      id,
+      fromDate,
+      toDate,
+      fromDateField,
+      toDateField,
+      title,
+      fieldOptions
     })
   }
 
@@ -134,24 +135,11 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     }
   }
 
-  componentDidMount() {
-    this.setInitialState()
-  }
-
-  setInitialState() {
-    this.accessor.state = this.accessor.state.setValue({
-      fromDate: this.props.initialFromDate,
-      toDate: this.props.initialToDate
-    })
-  }
-
   calendarUpdate(newValues) {
     if (!newValues.fromDate && !newValues.toDate) {
       this.accessor.state = this.accessor.state.clear()
-      console.log("Calendar state cleared")
     }
     else {
-      console.log("Calendar update! new values:", newValues)
       this.accessor.state = this.accessor.state.setValue(newValues)
     }
     this.forceUpdate()
@@ -168,7 +156,6 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
 
   render() {
     const { id, title, containerComponent, calendarComponent} = this.props
-    console.log("Rendering DateRangeFilter", this.props)
 
     return renderComponent(containerComponent, {
       title,
@@ -178,14 +165,12 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   }
 
   renderCalendarComponent(component: RenderComponentType<any>) {
-    const { fromDate, toDate, initialFromDate, initialToDate } = this.props
+    const { fromDate, toDate } = this.props
     const state = this.accessor.state.getValue()
 
-    console.log("Rendering calendar component", state)
-
     return renderComponent(component, {
-      fromDate: get(state, "fromDate", initialFromDate),
-      toDate: get(state, "toDate", initialToDate),
+      fromDate: get(state, "fromDate", fromDate),
+      toDate: get(state, "toDate", toDate),
       items: this.accessor.getBuckets(),
       onChange: this.calendarUpdate,
       onFinished: this.calendarUpdateAndSearch
