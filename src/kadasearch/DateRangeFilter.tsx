@@ -88,8 +88,8 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   static defaultProps = {
     containerComponent: Panel,
     showHistogram: true,
-    fromDate: 'now/d',
-    toDate: 'now+7d/d',
+    fromDate: 'now',
+    toDate: 'now/d',
     fieldOptions: {
       type: 'nested',
       options: {

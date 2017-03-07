@@ -29,6 +29,9 @@ import {
 
 import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
 import { DateRangeFilter } from './DateRangeFilter'
+import { SortingSelector } from './SortingSelector'
+
+import { elapsedSortQuery } from './EventSorting'
 
 import "./styles/theme.scss";
 
@@ -40,6 +43,7 @@ let SearchCalendar = Drupal.settings.currentCalendar;
 let SearchLanguage = Drupal.settings.language;
 let SearchIndex = SearchCalendar + '_' + SearchLanguage;
 let SearchServerURL = SearchServer.replace(/\/$/, '') + '/' + SearchIndex;
+
 
 export class KadaSearch extends React.Component<any, any> {
   searchkit: SearchkitManager;
@@ -142,6 +146,15 @@ export class KadaSearch extends React.Component<any, any> {
                 listComponent={ItemHistogramList}
               />
 
+              <RefinementListFilter
+                id="field_date_type"
+                title={window.Drupal.t("Date type")}
+                field="field_date_type"
+                operator="AND"
+                size={10}
+                listComponent={ItemHistogramList}
+              />
+
               { /*
 
               See https://www.elastic.co/guide/en/elasticsearch/reference/2.4/common-options.html#date-math
@@ -172,6 +185,13 @@ export class KadaSearch extends React.Component<any, any> {
                 </ActionBarRow>
                 <ActionBarRow>
                   <HitsStats/>
+                  <SortingSelector options={[
+                    {
+                      label: "Ending soon",
+                      query: elapsedSortQuery,
+                      defaultOption: true
+                    }
+                  ]}/>
                 </ActionBarRow>
               </ActionBar>
 
