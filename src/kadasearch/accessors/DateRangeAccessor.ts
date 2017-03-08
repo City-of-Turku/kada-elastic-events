@@ -9,10 +9,13 @@ import {
   FieldContext,
   FieldContextFactory,
   RangeOption,
+  ImmutableQuery
 } from "searchkit";
 
 import { DateRangeQuery } from "../query/DateRangeQuery";
-import { DateRangeMetric } from "../aggregations/DateRangeMetric";
+
+import { createEventSortScriptFieldQuery } from '../EventSorting'
+
 
 const maxBy = require("lodash/maxBy")
 const get = require("lodash/get")
@@ -96,9 +99,18 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       )
     ])
 
-    return query.setAggs(FilterBucket(
+    query = query.setAggs(FilterBucket(
       this.key,
       filters
     ))
+
+    // Script field support added via kadasearch/ImmutableQueryPatch
+    query = query.addScriptField(
+      createEventSortScriptFieldQuery(this.options.fromDate)
+    )
+
+    console.log(query)
+
+    return query
   }
 }

@@ -29,9 +29,6 @@ import {
 
 import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
 import { DateRangeFilter } from './DateRangeFilter'
-import { SortingSelector } from './SortingSelector'
-
-import { elapsedSortQuery } from './EventSorting'
 
 import "./styles/theme.scss";
 
@@ -155,12 +152,6 @@ export class KadaSearch extends React.Component<any, any> {
                 listComponent={ItemHistogramList}
               />
 
-              { /*
-
-              See https://www.elastic.co/guide/en/elasticsearch/reference/2.4/common-options.html#date-math
-
-              */ }
-
               <DateRangeFilter
                 id="field_event_date"
                 title={window.Drupal.t("When")}
@@ -185,13 +176,6 @@ export class KadaSearch extends React.Component<any, any> {
                 </ActionBarRow>
                 <ActionBarRow>
                   <HitsStats/>
-                  <SortingSelector options={[
-                    {
-                      label: "Ending soon",
-                      query: elapsedSortQuery,
-                      defaultOption: true
-                    }
-                  ]}/>
                 </ActionBarRow>
               </ActionBar>
 

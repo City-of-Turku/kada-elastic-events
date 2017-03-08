@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from "react"
 import { extend } from "lodash"
 
 /**
@@ -6,28 +6,17 @@ import { extend } from "lodash"
  * This is done to properly sort long events, and to boost long events that
  * are close to their ending date.
  */
-export const elapsedSortQuery = {
-  "_script" : {
-    "type" : "number",
-    "script" : {
-      "inline": `
-        def eventLength = max(_doc.field_event_date_length.value, 60000)
-        def eventElapsed = now - _doc.field_event_date_from_millis.value
-
-        def wToday = (eventElapsed > -43200000 && eventElapsed < 0) ? log(-1*eventElapsed/100000) : 0
-        def wLength = 1000000000/eventLength
-        def wElapsed = eventElapsed/eventLength
-
-        def startedWeight = Math.log(wLength + wElapsed)
-        def pendingWeight = wToday + Math.log(-200000000/eventElapsed)
-
-        eventElapsed > 0 ? startedWeight : pendingWeight
-      `,
-      "params" : {
-        "now" : +Date.now()
+export const createEventSortScriptFieldQuery = (now:string | number = +Date.now()) => {
+  return {
+    "event_weighted": {
+      "script": {
+        "inline": "eventsort",
+        "lang": "native",
+        "params": {
+          "now": now
+        }
       }
-    },
-    "order" : "desc"
+    }
   }
 }
 
@@ -36,15 +25,19 @@ export const EventSortDebugView = (props) => {
   const { result } = props;
   const source: any = extend({}, result._source, result.highlight);
 
-  const eventLength = Math.max(source.field_event_date_length, 60000)
-  const eventElapsed = +Date.now() - source.field_event_date_from_millis
+  // console.log(props)
 
+  const begin = +Date.now()
+
+  const eventLength = Math.max(source.field_event_date_length, 60000)
+  const eventElapsed = begin - source.field_event_date_from_millis
+
+  const wToday = (eventElapsed > -43200000 && eventElapsed < 0) ? (43200000+eventElapsed)/3000 : 0
   const wLength = 1000000000/eventLength
   const wElapsed = eventElapsed/eventLength
-  const wToday = (eventElapsed > -43200000 && eventElapsed < 0) ? Math.log(-1*eventElapsed/100000) : 0
 
   const startedWeight = Math.log(wLength + wElapsed)
-  const pendingWeight = wToday + Math.log(-200000000/eventElapsed)
+  const pendingWeight = Math.log(wToday + -200000000/eventElapsed)
   const eventSort = (eventElapsed > 0) ? startedWeight : pendingWeight
 
   const eventSortTitle = (eventElapsed > 0) ? `started, elapsed ${eventElapsed}` : `waiting to start, elapsed ${eventElapsed}`
