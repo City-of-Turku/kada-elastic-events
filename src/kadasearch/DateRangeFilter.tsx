@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as moment from "moment";
+
 
 import {
   SearchkitManager,
@@ -18,8 +20,6 @@ import {
   map,
   get
 } from "lodash"
-
-const RcCalendar = require("rc-calendar")
 
 import { DateRangeAccessor } from "./accessors/DateRangeAccessor"
 
@@ -151,11 +151,12 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   }
 
   getCalendarComponent() {
-    return (DateRangeFilterInput)
+    const { calendarComponent } = this.props
+    return (calendarComponent || DateRangeFilterInput)
   }
 
   render() {
-    const { id, title, containerComponent, calendarComponent} = this.props
+    const { id, title, containerComponent } = this.props
 
     return renderComponent(containerComponent, {
       title,

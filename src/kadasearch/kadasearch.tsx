@@ -29,6 +29,7 @@ import {
 
 import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
 import { DateRangeFilter } from './DateRangeFilter'
+import { DateRangeCalendar } from './DateRangeCalendar'
 
 import "./styles/theme.scss";
 
@@ -157,6 +158,7 @@ export class KadaSearch extends React.Component<any, any> {
                 title={window.Drupal.t("When")}
                 fromDateField="field_event_date.from"
                 toDateField="field_event_date.to"
+                calendarComponent={DateRangeCalendar}
                 fieldOptions={{
                   type: 'nested',
                   options: {
