@@ -14,7 +14,7 @@ import {
 
 import { DateRangeQuery } from "../query/DateRangeQuery";
 
-import { createEventSortScriptFieldQuery } from '../EventSorting'
+import { createEventSortQuery } from '../EventSorting'
 
 
 const maxBy = require("lodash/maxBy")
@@ -104,12 +104,9 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       filters
     ))
 
-    // Script field support added via kadasearch/ImmutableQueryPatch
-    query = query.addScriptField(
-      createEventSortScriptFieldQuery(this.options.fromDate)
+    query = query.setSort(
+      createEventSortQuery(this.options.fromDate)
     )
-
-    console.log(query)
 
     return query
   }

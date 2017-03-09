@@ -2,8 +2,6 @@ import { extend } from "lodash";
 import * as React from "react";
 import Drupal from "../DrupalSettings.tsx";
 
-import { EventSortDebugView } from './EventSorting'
-
 import {
   TagFilterList
 } from "searchkit"
@@ -98,14 +96,11 @@ const EventListItem = (props) => {
   const eventTypes = (<TagFilterList field="field_event_types" values={source.field_event_types} />)
   const eventKeywords = (<TagFilterList field="field_keywords_et" values={source.field_keywords_et} />)
 
-  const eventSortDebug = (<EventSortDebugView {...props} />);
-
   let isRenderable = (title !== null);
   return (isRenderable) ? (
     <div className="event event--list">
       {image}
       <div className="event__content__wrapper">
-        {eventSortDebug}
         <h2 className="event__title">
           <a href={url} dangerouslySetInnerHTML={{__html:title}}></a>
         </h2>
