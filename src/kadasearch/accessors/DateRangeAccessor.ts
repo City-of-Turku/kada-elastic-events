@@ -47,6 +47,11 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
     this.rangeFormatter = this.options.rangeFormatter || identity
   }
 
+  clearState = () => {
+    this.state = this.state.clear()
+    console.log("State cleared")
+  }
+
   buildSharedQuery(query) {
     if (this.state.hasValue()) {
       let val:any = this.state.getValue()
@@ -65,9 +70,7 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
         name:this.translate(this.options.title),
         value: selectedFilterText,
         id:this.options.id,
-        remove:()=> {
-          this.state = this.state.clear()
-        }
+        remove:this.clearState
       }
 
       return query

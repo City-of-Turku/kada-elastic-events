@@ -151,6 +151,32 @@ body {
   }
 }
 
+.sk-date-box {
+  background-color: $sk-item-background;
+  border-radius: $sk-border-radius;
+  margin-bottom: 10px;
+  position: relative;
+  display: flex;
+  flex: 1;
+
+  .sk-date-box__text {
+    border: 0;
+    background:transparent;
+    flex: 1;
+    font-weight:200;
+    font-size: $font-size-h3;
+    padding: 10px 9px 10px;
+    user-select: initial;
+    width: auto;
+
+
+    &::-webkit-input-placeholder  {
+      color: $sk-placeholder-color;
+      font-weight:100;
+    }
+  }
+}
+
 .sk-panel {
   &__header {
     background-color: $sk-button-background;

@@ -4,6 +4,8 @@ import 'rc-calendar/assets/index.css';
 
 import Drupal from "../DrupalSettings.tsx";
 
+declare var window;
+
 moment.locale(Drupal.settings.language)
 
 import {
@@ -17,7 +19,7 @@ const enUS = require('rc-calendar').enUS;
 const DatePicker = require('rc-calendar/lib/Picker');
 
 const format = 'YYYY-MM-DD';
-const fullFormat = 'dddd D.M.Y';
+const fullFormat = 'ddd D.M.Y';
 
 export class Picker extends SearchkitComponent<any, any> {
   render() {
@@ -33,7 +35,7 @@ export class Picker extends SearchkitComponent<any, any> {
         onChange={props.onChange}
         disabledDate={props.disabledDate}
         showToday={true}
-        showOk={true}
+        showOk={false}
         showClear={true}
       />);
     return (
@@ -45,14 +47,14 @@ export class Picker extends SearchkitComponent<any, any> {
       >
         {
           () => (
-            <span>
-              <input
-                placeholder={this.props.dateInputPlaceholder}
-                style={{ width: 250 }}
-                readOnly
-                value={showValue && showValue.format(fullFormat) || ''}
-              />
-            </span>
+            <div className="sk-date-box">
+              <div className="sk-date-box__text" style={{flex:"1 0 80px"}}>
+                {this.props.dateInputPlaceholder}:
+              </div>
+              <div className="sk-date-box__text" style={{flex:"1 0 50%"}}>
+                {showValue && showValue.format(fullFormat)}
+              </div>
+            </div>
           )
         }
       </DatePicker>);
@@ -106,6 +108,13 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
     this.onFinish({ fromDate: this.state.startValue, toDate: value[1] })
   }
 
+  clearState = () => {
+    this.setState({
+      startValue: null,
+      endValue: null,
+    })
+  }
+
   disabledStartDate = (endValue) => {
     if (!endValue) {
       return false;
@@ -127,6 +136,9 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
     const { fromDate, toDate } = this.props
     const state = this.state;
 
+    const fromLabel = window.Drupal.t("From date");
+    const toLabel = window.Drupal.t("To date");
+
     return (
       <div>
         <Picker
@@ -136,7 +148,7 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
           open={this.state.startOpen}
           value={[state.startValue, state.endValue]}
           onChange={this.onStartChange}
-          dateInputPlaceholder={"Alku"}
+          dateInputPlaceholder={fromLabel}
         />
         <Picker
           onOpenChange={this.onEndOpenChange}
@@ -146,7 +158,7 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
           disabledDate={this.disabledStartDate}
           value={[state.startValue, state.endValue]}
           onChange={this.onEndChange}
-          dateInputPlaceholder={"Loppu"}
+          dateInputPlaceholder={toLabel}
         />
       </div>
     )
