@@ -148,6 +148,7 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   }
 
   calendarUpdateAndSearch(newValues) {
+    console.log("new values", newValues)
     this.calendarUpdate(newValues)
     this.searchkit.performSearch()
   }
@@ -172,8 +173,10 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     const state = this.accessor.state.getValue()
 
     return renderComponent(component, {
-      fromDate: get(state, "fromDate", fromDate),
-      toDate: get(state, "toDate", toDate),
+      fromDate,
+      toDate,
+      fromDateValue: get(state, "fromDate", fromDate),
+      toDateValue: get(state, "toDate", toDate),
       items: this.accessor.getBuckets(),
       onChange: this.calendarUpdate,
       onFinished: this.calendarUpdateAndSearch,

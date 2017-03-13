@@ -131,7 +131,13 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
   onFinish = (state) => {
     const { fromDate, toDate } = state
     const { onFinished } = this.props
-    onFinished({ fromDate, toDate: (toDate && (toDate + "||/d")) })
+    // Today's date isn't queried using /d, but everything else is.
+    const notToday = fromDate > +moment().endOf("day")
+                  || fromDate < +moment().startOf("day")
+    onFinished({
+      fromDate: notToday && (fromDate + "||/d") || +fromDate,
+      toDate: (toDate && (toDate + "||/d"))
+    })
   }
 
   render() {

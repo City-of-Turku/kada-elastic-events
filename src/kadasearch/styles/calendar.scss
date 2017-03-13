@@ -1,3 +1,5 @@
+// Overrides for rc-calendar styles.
+
 .sk-calendar-picker {
   position: absolute;
   left: -9999px;
@@ -17,7 +19,6 @@
       min-width: 75vw;
     }
   }
-
 
   .rc-calendar-date-panel {
     display: flex;
@@ -39,7 +40,7 @@
   }
 
   @include breakpoint('small-desk') {
-    &.rc-calendar-range {
+    .rc-calendar.rc-calendar-range {
       width: auto;
       min-width: 600px;
     }
