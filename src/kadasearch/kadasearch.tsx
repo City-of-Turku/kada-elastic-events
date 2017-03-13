@@ -1,6 +1,8 @@
 import * as React from "react";
+import * as moment from "moment";
 import { EventListItem } from "./HitItems";
 import Drupal from "../DrupalSettings";
+
 var MultiSelect = require('searchkit-multiselect');
 
 declare var window;
@@ -255,6 +257,7 @@ export class KadaSearch extends React.Component<any, any> {
                       path: 'field_event_date'
                     }
                   }}
+                  rangeFormatter={(v) => moment(parseInt(""+v)).format('D.M.YYYY')}
                 />
 
                 <HierarchicalRefinementFilter

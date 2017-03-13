@@ -16,9 +16,9 @@ import { DateRangeQuery } from "../query/DateRangeQuery";
 
 import { createEventSortQuery } from '../EventSorting'
 
-
 const maxBy = require("lodash/maxBy")
 const get = require("lodash/get")
+const identity = require("lodash/identity")
 
 export interface DateRangeAccessorOptions {
   title:string
@@ -30,18 +30,21 @@ export interface DateRangeAccessorOptions {
   toDateField:string
   loadHistogram?:boolean
   fieldOptions?:FieldOptions
+  rangeFormatter?:(count:number)=> number | string
 }
 
 export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
   options:DateRangeAccessorOptions
   state = new ObjectState({})
   fieldContext:FieldContext
+  rangeFormatter:(count:number)=> number | string
 
   constructor(key, options:DateRangeAccessorOptions){
     super(key, options.id)
     this.options = options
     this.options.fieldOptions = this.options.fieldOptions || { type:"embedded" }
     this.fieldContext = FieldContextFactory(this.options.fieldOptions)
+    this.rangeFormatter = this.options.rangeFormatter || identity
   }
 
   buildSharedQuery(query) {
@@ -53,9 +56,14 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       let toDateRangeFilter = this.fieldContext.wrapFilter(DateRangeQuery(this.options.toDateField,{
         gte: val.fromDate
       }))
+      const fromVal = this.rangeFormatter(val.fromDate);
+      const toVal = this.rangeFormatter(val.toDate);
+      const selectedFilterText = (val.toDate)
+        ? `${fromVal} – ${toVal}`
+        : `${fromVal} –`
       let selectedFilter = {
         name:this.translate(this.options.title),
-        value:`${val.fromDate} - ${val.toDate}`,
+        value: selectedFilterText,
         id:this.options.id,
         remove:()=> {
           this.state = this.state.clear()

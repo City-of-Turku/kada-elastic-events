@@ -3,7 +3,6 @@ import * as moment from "moment";
 
 
 import {
-  SearchkitManager,
   SearchkitComponent,
   SearchkitComponentProps,
   FastClick,
@@ -11,8 +10,7 @@ import {
   RenderComponentPropType,
   renderComponent,
   FieldOptions,
-  Panel, RangeComponentBuilder,
-  RangeSliderHistogram, RangeSlider
+  Panel
 } from "searchkit"
 
 import {
@@ -61,6 +59,7 @@ export interface DateRangeFilterProps extends SearchkitComponentProps {
   interval?:number
   containerComponent?: RenderComponentType<any>
   calendarComponent?: RenderComponentType<any>
+  rangeFormatter?:(count:number)=> number | string
   fieldOptions?:FieldOptions
 }
 
@@ -78,6 +77,7 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     id:React.PropTypes.string.isRequired,
     containerComponent:RenderComponentPropType,
     calendarComponent:RenderComponentPropType,
+    rangeFormatter:React.PropTypes.func,
     fieldOptions:React.PropTypes.shape({
       type:React.PropTypes.oneOf(["embedded", "nested", "children"]).isRequired,
       options:React.PropTypes.object
@@ -114,6 +114,7 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
       fromDateField,
       toDateField,
       fieldOptions,
+      rangeFormatter,
     } = this.props
 
     return new DateRangeAccessor(id, {
@@ -123,7 +124,8 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
       fromDateField,
       toDateField,
       title,
-      fieldOptions
+      fieldOptions,
+      rangeFormatter,
     })
   }
 
@@ -166,7 +168,7 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
   }
 
   renderCalendarComponent(component: RenderComponentType<any>) {
-    const { fromDate, toDate } = this.props
+    const { fromDate, toDate, rangeFormatter } = this.props
     const state = this.accessor.state.getValue()
 
     return renderComponent(component, {
@@ -174,7 +176,8 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
       toDate: get(state, "toDate", toDate),
       items: this.accessor.getBuckets(),
       onChange: this.calendarUpdate,
-      onFinished: this.calendarUpdateAndSearch
+      onFinished: this.calendarUpdateAndSearch,
+      rangeFormatter
     })
   }
 
