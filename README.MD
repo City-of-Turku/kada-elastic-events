@@ -13,3 +13,10 @@ Installation:
 - visit http://localhost:3000 (This is current default, will change later).
 
 Also installation of Elastic Search 2.x(for now, later 5.x) is recommended if using the Kadasearch-Drupal module for indexing(not published yet).
+
+## Packing a new dist
+
+- Install Webpack
+  - `$ npm install webpack`
+- Run Webpack
+  - `$ ./node_modules/.bin/webpack --config webpack.prod.config.js`

@@ -1,5 +1,6 @@
 @import "variables.scss";
 @import "abstractions.scss";
+@import "react-select.scss";
 // @TODO resolve imports via alias
 @import "../../../node_modules/searchkit/theming/components.scss";
 
@@ -47,14 +48,6 @@ body {
     .sk-range-input {
       margin-top:10px;
     }
-
-    // .sk-selected-filters {
-    //   flex-flow: column nowrap;
-    //   &-option {
-    //     margin-right:0;
-    //     margin-bottom:10px;
-    //   }
-    // }
   }
 
   &__results {
@@ -69,7 +62,6 @@ body {
     }
   }
 }
-
 
 .sk-layout {
   &__size-l {
@@ -131,7 +123,7 @@ body {
 
   &.is-focused &__text::-webkit-input-placeholder  {
     color: $sk-text-color;
-    font-weight:$sk-light-weight;
+    font-weight: $sk-light-weight;
   }
 
   form {
@@ -179,6 +171,28 @@ body {
         }
       }
     }
+  }
+
+  &.filter--target_audience {
+    .sk-panel__header {
+      display: none;
+    }
+  }
+
+  .kada-hobbies-search &.filter--district {
+    .sk-panel__header {
+      background-color: transparent;
+      font-size: 1.1rem;
+      margin-top: 10px;
+      padding: 0;
+    }
+  }
+
+  .sk-hierarchical-refinement-list__header {
+    background-color: transparent;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    padding: 0;
   }
 }
 
@@ -346,7 +360,6 @@ body {
 
 .sk-toggle {
    max-height: initial;
-//   display: block;
 }
 
 .sk-toggle-option {

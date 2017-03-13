@@ -13,8 +13,20 @@
     "jsx": "react"
   },
   "files": [
-    "./src/kadasearch/kadasearch.tsx",
+    "./src/app/src/App.tsx",
+    "./src/app/src/crime/CrimeAggs.tsx",
+    "./src/app/src/crime/CrimeApp.tsx",
+    "./src/app/src/list-app/ListApp.tsx",
+    "./src/app/src/ResultComponents.tsx",
+    "./src/app/src/TaxonomyApp.tsx",
+    "./src/app/test/unit/AppSpec.tsx",
+    "./src/DrupalSettings.tsx",
     "./src/index.tsx",
+    "./src/kadasearch/HierarchicalRefinementFilter.tsx",
+    "./src/kadasearch/HitItems.tsx",
+    "./src/kadasearch/kadasearch.tsx",
+    "./src/kadasearch/RefinementWithText.tsx",
+    "./src/app/index.ts",
     "./typings/tsd.d.ts"
   ],
   "filesGlob": [

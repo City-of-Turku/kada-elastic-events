@@ -4,3 +4,4 @@ typings/**
 !typings/tsd.d.ts
 npm-debug.log
 /images
+kada-config.js

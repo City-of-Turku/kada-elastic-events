@@ -31,7 +31,8 @@
     "react-dom": "^15.4.2",
     "react-hot-loader": "^1.3.0",
     "searchkit": "^0.10.1",
-    "searchkit-express": "^0.2.1"
+    "searchkit-express": "^0.2.1",
+    "searchkit-multiselect": "0.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.3",

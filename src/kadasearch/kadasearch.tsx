@@ -1,6 +1,7 @@
 import * as React from "react";
-import { EventListItem } from "./HitItems.tsx";
-import Drupal from "../DrupalSettings.tsx";
+import { EventListItem } from "./HitItems";
+import Drupal from "../DrupalSettings";
+var MultiSelect = require('searchkit-multiselect');
 
 declare var window;
 
@@ -27,6 +28,7 @@ import {
 } from "searchkit";
 
 import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
+import RefinementWithText from './RefinementWithText'
 import { DateRangeFilter } from './DateRangeFilter'
 import { DateRangeCalendar } from './DateRangeCalendar'
 
@@ -76,133 +78,284 @@ export class KadaSearch extends React.Component<any, any> {
   }
 
   render() {
-    return (
-      <SearchkitProvider searchkit={this.searchkit}>
-        <Layout size="l">
-          <LayoutBody>
-            <SideBar>
-              <SearchBox
-                autofocus={false}
-                searchOnChange={true}
-                queryFields={[
-                  "title_field^8",
-                  "field_lead_paragraph_et^5",
-                  "field_address^13",
-                  "field_district^20",
-                ]}
-                prefixQueryFields={[
-                  "title_field^8",
-                  "field_lead_paragraph_et^5",
-                  "field_address^13",
-                  "field_district^20",
-                ]}
-              />
-
-              <RefinementListFilter
-                id="event_types"
-                title={window.Drupal.t("What")}
-                field="field_event_types"
-                operator="AND"
-                size={5}
-                containerComponent={CollapsedPanel}
-                listComponent={ItemHistogramList}
-              />
-
-              <RefinementListFilter
-                id="target_audience"
-                title={window.Drupal.t("For whom")}
-                field="field_target_audience"
-                operator="AND"
-                size={10}
-                containerComponent={CollapsedPanel}
-                listComponent={ItemHistogramList}
-              />
-
-              <RefinementListFilter
-                id="district"
-                title={window.Drupal.t("Where")}
-                field="field_district"
-                operator="AND"
-                size={10}
-                containerComponent={CollapsedPanel}
-                listComponent={ItemHistogramList}
-              />
-
-              <RefinementListFilter
-                id="field_keywords_et"
-                title={window.Drupal.t("Keywords")}
-                field="field_keywords_et"
-                operator="AND"
-                size={10}
-                containerComponent={CollapsedPanel}
-                listComponent={ItemHistogramList}
-              />
-
-              <RefinementListFilter
-                id="field_date_type"
-                title={window.Drupal.t("Date type")}
-                field="field_date_type"
-                operator="AND"
-                size={10}
-                listComponent={ItemHistogramList}
-              />
-
-              <DateRangeFilter
-                id="field_event_date"
-                title={window.Drupal.t("When")}
-                fromDateField="field_event_date.from"
-                toDateField="field_event_date.to"
-                calendarComponent={DateRangeCalendar}
-                fieldOptions={{
-                  type: 'nested',
-                  options: {
-                    path: 'field_event_date'
-                  }
-                }}
-              />
-
-            </SideBar>
-
-            <LayoutResults>
-
-              <ActionBar>
-                <ActionBarRow>
-                  <GroupedSelectedFilters/>
-                  <ResetFilters/>
-                </ActionBarRow>
-                <ActionBarRow>
-                  <HitsStats/>
-                </ActionBarRow>
-              </ActionBar>
-
-              <Pagination
-                showNumbers={true}
-                pageScope={2}
-              />
-
-              <div className="clearfix">
-                <Hits
-                  itemComponent={EventListItem}
-                  hitsPerPage={10}
-                  highlightFields={[
-                    "title_field",
-                    "field_lead_paragraph_et",
+    if (SearchCalendar == 'hobbies') {
+      return (
+        <SearchkitProvider searchkit={this.searchkit}>
+          <Layout size="l">
+            <LayoutBody>
+              <SideBar>
+                <SearchBox
+                  autofocus={false}
+                  searchOnChange={true}
+                  queryFields={[
+                    "title_field^8",
+                    "field_lead_paragraph_et^5",
+                    "field_district^10",
+                    "field_address^13"
                   ]}
-                  scrollTo={false}
+                  prefixQueryFields={[
+                    "title_field^8",
+                    "field_lead_paragraph_et^5",
+                    "field_district^10",
+                    "field_address^13"
+                  ]}
                 />
-              </div>
 
-              <NoHits
-                suggestionsField="title_field"
-              />
+                <DateRangeFilter
+                  id="field_event_date"
+                  title={window.Drupal.t("When")}
+                  fromDateField="field_event_date.from"
+                  toDateField="field_event_date.to"
+                  calendarComponent={DateRangeCalendar}
+                  fieldOptions={{
+                    type: 'nested',
+                    options: {
+                      path: 'field_event_date'
+                    }
+                  }}
+                />
 
-              <Pagination />
+                <HierarchicalRefinementFilter
+                  id="timeofday"
+                  title={window.Drupal.t("Time of day")}
+                  field="field_event_date_timeofday"
+                  orderKey="field_event_date_timeofday.order"
+                />
 
-            </LayoutResults>
-          </LayoutBody>
+                <HierarchicalRefinementFilter
+                  id="hobby_types"
+                  title={window.Drupal.t("What")}
+                  field="field_hobby_category"
+                  orderKey="field_hobby_category.level"
+                />
 
-        </Layout>
-      </SearchkitProvider>
-    );
+                <Panel
+                  collapsable={true}
+                  defaultCollapsed={true}
+                  title={window.Drupal.t("Where")}>
+
+                  <RefinementListFilter
+                    id="district"
+                    title={window.Drupal.t("Write or search from dropdown")}
+                    field="field_district"
+                    operator="OR"
+                    listComponent={MultiSelect}
+                    size={100}
+                  />
+
+                </Panel>
+
+                <RefinementWithText
+                  id="target_audience"
+                  title={window.Drupal.t("For whom")}
+                  field="field_target_audience"
+                  operator="OR"
+                  listComponent={ItemHistogramList}
+                  description={window.Drupal.t("Select one or many")}
+                />
+
+                <Panel
+                  collapsable={true}
+                  defaultCollapsed={true}
+                  title={window.Drupal.t("When")}>
+
+                  <HierarchicalRefinementFilter
+                    id="weekday"
+                    title={window.Drupal.t("Weekday")}
+                    field="field_event_date_weekday"
+                    orderKey="field_event_date_weekday.order"
+                  />
+
+
+                </Panel>
+
+                <RefinementListFilter
+                  id="hobby_details"
+                  title={window.Drupal.t("Fine down search")}
+                  field="hobby_details"
+                  operator="AND"
+                  containerComponent={CollapsedPanel}
+                  listComponent={ItemHistogramList}
+                />
+
+              </SideBar>
+
+              <LayoutResults>
+
+                <ActionBar>
+                  <ActionBarRow>
+                    <GroupedSelectedFilters/>
+                    <ResetFilters/>
+                  </ActionBarRow>
+                  <ActionBarRow>
+                    <HitsStats/>
+                  </ActionBarRow>
+                </ActionBar>
+
+                <Pagination
+                  showNumbers={true}
+                  pageScope={2}
+                />
+
+                <div className="clearfix">
+                  <Hits
+                    itemComponent={EventListItem}
+                    hitsPerPage={10}
+                    highlightFields={[
+                      "title_field",
+                      "field_lead_paragraph_et",
+                    ]}
+                    scrollTo={false}
+                  />
+                </div>
+
+                <NoHits
+                  suggestionsField="title_field"
+                />
+
+                <Pagination />
+
+              </LayoutResults>
+            </LayoutBody>
+
+          </Layout>
+        </SearchkitProvider>
+      );
+    }
+    else {
+      return (
+        <SearchkitProvider searchkit={this.searchkit}>
+          <Layout size="l">
+            <LayoutBody>
+              <SideBar>
+                <SearchBox
+                  autofocus={false}
+                  searchOnChange={true}
+                  queryFields={[
+                    "title_field^8",
+                    "field_lead_paragraph_et^5",
+                    "field_address^13"
+                  ]}
+                  prefixQueryFields={[
+                    "title_field^8",
+                    "field_lead_paragraph_et^5",
+                    "field_address^13"
+                  ]}
+                />
+
+                <DateRangeFilter
+                  id="field_event_date"
+                  title={window.Drupal.t("When")}
+                  fromDateField="field_event_date.from"
+                  toDateField="field_event_date.to"
+                  calendarComponent={DateRangeCalendar}
+                  fieldOptions={{
+                    type: 'nested',
+                    options: {
+                      path: 'field_event_date'
+                    }
+                  }}
+                />
+
+                <HierarchicalRefinementFilter
+                  id="timeofday"
+                  title={window.Drupal.t("Time of day")}
+                  field="field_event_date_timeofday"
+                  orderKey="field_event_date_timeofday.order"
+                />
+
+                <RefinementListFilter
+                  id="field_date_type"
+                  title={window.Drupal.t("Date type")}
+                  field="field_date_type"
+                  operator="AND"
+                  size={10}
+                  listComponent={ItemHistogramList}
+                />
+
+                <RefinementListFilter
+                  id="event_types"
+                  title={window.Drupal.t("What")}
+                  field="field_event_types"
+                  operator="AND"
+                  size={5}
+                  containerComponent={CollapsedPanel}
+                  listComponent={ItemHistogramList}
+                />
+
+                <RefinementListFilter
+                  id="target_audience"
+                  title={window.Drupal.t("For whom")}
+                  field="field_target_audience"
+                  operator="AND"
+                  size={10}
+                  containerComponent={CollapsedPanel}
+                  listComponent={ItemHistogramList}
+                />
+
+                <RefinementListFilter
+                  id="district"
+                  title={window.Drupal.t("Where")}
+                  field="field_district"
+                  operator="AND"
+                  size={10}
+                  containerComponent={CollapsedPanel}
+                  listComponent={ItemHistogramList}
+                />
+
+                <RefinementListFilter
+                  id="field_keywords_et"
+                  title={window.Drupal.t("Keywords")}
+                  field="field_keywords_et"
+                  operator="AND"
+                  size={10}
+                  containerComponent={CollapsedPanel}
+                  listComponent={ItemHistogramList}
+                />
+
+              </SideBar>
+
+              <LayoutResults>
+
+                <ActionBar>
+                  <ActionBarRow>
+                    <GroupedSelectedFilters/>
+                    <ResetFilters/>
+                  </ActionBarRow>
+                  <ActionBarRow>
+                    <HitsStats/>
+                  </ActionBarRow>
+                </ActionBar>
+
+                <Pagination
+                  showNumbers={true}
+                  pageScope={2}
+                />
+
+                <div className="clearfix">
+                  <Hits
+                    itemComponent={EventListItem}
+                    hitsPerPage={10}
+                    highlightFields={[
+                      "title_field",
+                      "field_lead_paragraph_et",
+                    ]}
+                    scrollTo={false}
+                  />
+                </div>
+
+                <NoHits
+                  suggestionsField="title_field"
+                />
+
+                <Pagination />
+
+              </LayoutResults>
+            </LayoutBody>
+
+          </Layout>
+        </SearchkitProvider>
+      );
+    }
   }
 }

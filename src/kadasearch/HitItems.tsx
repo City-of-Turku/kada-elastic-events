@@ -1,6 +1,6 @@
 import { extend } from "lodash";
 import * as React from "react";
-import Drupal from "../DrupalSettings.tsx";
+import Drupal from "../DrupalSettings";
 
 import {
   TagFilterList

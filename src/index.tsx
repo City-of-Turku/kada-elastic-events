@@ -3,6 +3,7 @@ import * as React from "react";
 import { KadaSearch } from "./kadasearch/kadasearch.tsx";
 import DrupalSettings from "./DrupalSettings.tsx";
 import { Router, Route, IndexRoute } from "react-router";
+
 const createBrowserHistory = require("history/lib/createBrowserHistory")
 
 let rootElemId = "kada-event-search";
