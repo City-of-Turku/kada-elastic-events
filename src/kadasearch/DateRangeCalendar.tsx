@@ -18,7 +18,7 @@ const RangeCalendar = require('rc-calendar/lib/RangeCalendar');
 const enUS = require('rc-calendar').enUS;
 const DatePicker = require('rc-calendar/lib/Picker');
 
-const format = 'YYYY-MM-DD';
+const format = 'dddd D. MMMM YYYY';
 const fullFormat = 'ddd D.M.Y';
 
 export class Picker extends SearchkitComponent<any, any> {
@@ -36,14 +36,16 @@ export class Picker extends SearchkitComponent<any, any> {
         disabledDate={props.disabledDate}
         showToday={true}
         showOk={false}
-        showClear={true}
+        showClear={false}
       />);
     return (
       <DatePicker
+        prefixCls="sk-calendar-picker"
         open={this.props.open}
         onOpenChange={this.props.onOpenChange}
         calendar={calendar}
         value={props.value}
+        dateFormat={format}
       >
         {
           () => (

@@ -1,6 +1,7 @@
 @import "variables.scss";
 @import "abstractions.scss";
 @import "react-select.scss";
+@import "calendar.scss";
 // @TODO resolve imports via alias
 @import "../../../node_modules/searchkit/theming/components.scss";
 
@@ -164,7 +165,7 @@ body {
     background:transparent;
     flex: 1;
     font-weight:200;
-    font-size: $font-size-h3;
+    font-size: $paragraph-font-size;
     padding: 10px 9px 10px;
     user-select: initial;
     width: auto;

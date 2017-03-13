@@ -1,0 +1,158 @@
+.sk-calendar-picker {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  z-index: 1000;
+}
+
+.sk-calendar-picker {
+  .rc-calendar {
+    font-family: $sk-font-family;
+    font-size: $paragraph-font-size;
+    border-color: $turkucalendar-mediumgray;
+    border-radius: 0;
+
+    &.rc-calendar-range {
+      width: auto;
+      min-width: 75vw;
+    }
+  }
+
+
+  .rc-calendar-date-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rc-calendar-range-part {
+    flex: 1 0 50%;
+    width: auto;
+  }
+
+  .rc-calendar-range-left {
+    float: none;
+  }
+
+  .rc-calendar-range-right {
+    float: none;
+  }
+
+  @include breakpoint('small-desk') {
+    &.rc-calendar-range {
+      width: auto;
+      min-width: 600px;
+    }
+
+    .rc-calendar-date-panel {
+      flex-direction: row;
+    }
+  }
+
+  input {
+    font-family: $sk-font-family;
+    font-size: $paragraph-font-size;
+  }
+
+  .rc-calendar-footer-btn {
+    padding: 0;
+
+    a {
+      padding: 9px 10px;
+    }
+  }
+
+  .rc-calendar-year-select,
+  .rc-calendar-month-select, .rc-calendar-day-select {
+    font-size: $font-size-h3;
+  }
+
+  .rc-calendar-date {
+    border-radius: 0;
+    width: auto;
+    height: auto;
+    color: $body-font-color;
+  }
+
+  .rc-calendar-last-month-cell .rc-calendar-date,
+  .rc-calendar-next-month-btn-day .rc-calendar-date {
+    color: darken($turkucalendar-lightgray, 10%);
+  }
+
+  .rc-calendar-selected-day .rc-calendar-date,
+  .rc-calendar-date:hover {
+    border: 1px solid $turkucalendar-darkgray;
+    background: $turkucalendar-darkgray;
+    color: $turkucalendar-lightgray;
+    border-radius: 5px;
+    margin-left: -3px;
+    margin-right: -3px;
+    position: relative;
+  }
+
+  .rc-calendar-cell {
+    height: 40px;
+
+    &.rc-calendar-in-range-cell {
+      background: transparent;
+
+      .rc-calendar-date {
+        background: $turkucalendar-lightgray;
+        width: 100%;
+        border-bottom: 1px solid $turkucalendar-darkgray;
+        border-top: 1px solid $turkucalendar-darkgray;
+      }
+    }
+  }
+
+  .rc-calendar-today {
+    .rc-calendar-date {
+      border: 0;
+      font-weight: 900;
+    }
+  }
+
+  .rc-calendar-disabled-cell .rc-calendar-date {
+    background: $turkucalendar-lightergray;
+    color: darken($turkucalendar-lightgray, 10%);
+    font-weight: 200;
+  }
+
+  .rc-calendar-body {
+    height: auto;
+    border-color: $turkucalendar-lightgray;
+  }
+
+  .rc-calendar-today-btn-disabled {
+    display: none;
+  }
+
+  .rc-calendar-header {
+    height: auto;
+    border-color: $turkucalendar-darkgray;
+  }
+
+  .rc-calendar-input-wrap {
+    border-color: $turkucalendar-darkgray;
+    height: auto;
+  }
+
+  .rc-calendar-input {
+    height: auto;
+    color: $body-font-color;
+  }
+
+  .rc-calendar-header {
+    background-color: $turkucalendar-darkgray;
+  }
+
+  .rc-calendar-prev-month-btn,
+  .rc-calendar-next-month-btn,
+  .rc-calendar-prev-year-btn,
+  .rc-calendar-next-year-btn,
+  .rc-calendar-year-select,
+  .rc-calendar-month-select,
+  .rc-calendar-day-select {
+    color: $turkucalendar-lightgray;
+  }
+}
