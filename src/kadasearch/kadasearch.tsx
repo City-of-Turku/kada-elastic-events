@@ -23,7 +23,6 @@ import {
   SideBar,
   Panel,
   ActionBar, ActionBarRow,
-  FilteredQuery,
   TermQuery
 } from "searchkit";
 
@@ -55,11 +54,6 @@ export class KadaSearch extends React.Component<any, any> {
       // the q parameter in the query string.
       useHistory: false,
     });
-
-    this.searchkit.addDefaultQuery((query)=> {
-      return query.addQuery(FilteredQuery({
-      }))
-    })
 
     // Attach translations to Drupal
     this.searchkit.translateFunction = (key) => {
