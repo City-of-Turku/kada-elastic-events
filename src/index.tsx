@@ -1,7 +1,7 @@
 import * as ReactDOM from "react-dom";
 import * as React from "react";
-import { KadaSearch } from "./kadasearch/kadasearch.tsx";
-import DrupalSettings from "./DrupalSettings.tsx";
+import { KadaSearch } from "./kadasearch/kadasearch";
+import DrupalSettings from "./DrupalSettings";
 import { Router, Route, IndexRoute } from "react-router";
 
 const createBrowserHistory = require("history/lib/createBrowserHistory")

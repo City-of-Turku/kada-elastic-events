@@ -33,6 +33,7 @@ import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
 import RefinementWithText from './RefinementWithText'
 import { DateRangeFilter } from './DateRangeFilter'
 import { DateRangeCalendar } from './DateRangeCalendar'
+import { DateRangeQuery } from "./query/DateRangeQuery";
 
 import "./styles/theme.scss";
 
@@ -106,6 +107,7 @@ export class KadaSearch extends React.Component<any, any> {
                 <DateRangeFilter
                   id="field_event_date"
                   title={window.Drupal.t("When")}
+                  fromDate={moment()}
                   fromDateField="field_event_date.from"
                   toDateField="field_event_date.to"
                   calendarComponent={DateRangeCalendar}

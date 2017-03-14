@@ -94,7 +94,6 @@ const EventListItem = (props) => {
   ): null;
 
   const eventTypes = (<TagFilterList field="field_event_types" values={source.field_event_types} />)
-  const eventKeywords = (<TagFilterList field="field_keywords_et" values={source.field_keywords_et} />)
 
   let isRenderable = (title !== null);
   return (isRenderable) ? (

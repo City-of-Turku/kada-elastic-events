@@ -25,12 +25,10 @@ export class Picker extends SearchkitComponent<any, any> {
   render() {
     const props = this.props;
     const { showValue } = props;
-    const now = moment()
     const calendar = (
       <RangeCalendar
         type={this.props.type}
         locale={enUS}
-        defaultValue={[now, null]}
         format={format}
         onChange={props.onChange}
         disabledDate={props.disabledDate}
@@ -38,6 +36,7 @@ export class Picker extends SearchkitComponent<any, any> {
         showOk={false}
         showClear={false}
       />);
+
     return (
       <DatePicker
         prefixCls="sk-calendar-picker"
@@ -64,7 +63,6 @@ export class Picker extends SearchkitComponent<any, any> {
 };
 
 
-
 export class DateRangeCalendar extends SearchkitComponent<any, any> {
   refs: {
     [key: string]: any;
@@ -74,9 +72,10 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
 
   constructor(props) {
     super(props)
+    const { fromDate, toDate } = props
     this.state = {
-      startValue: null,
-      endValue: null,
+      startValue: fromDate || null,
+      endValue: toDate || null,
       startOpen: false,
       endOpen: false,
     }
@@ -96,25 +95,33 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
 
   onStartChange = (value) => {
     this.setState({
-      startValue: value[0],
       startOpen: false,
       endOpen: true,
     });
-    this.onFinish({ fromDate: value[0], toDate: this.state.endValue })
+    this.handleChange(value)
   }
 
   onEndChange = (value) => {
-    this.setState({
-      endValue: value[1],
-    });
-    this.onFinish({ fromDate: this.state.startValue, toDate: value[1] })
+    this.handleChange(value)
   }
 
   clearState = () => {
+    const { onFinished } = this.props
     this.setState({
       startValue: null,
       endValue: null,
     })
+    onFinished({
+      fromDate: null,
+      toDate: null
+    })
+  }
+
+  disabledPastDate = (endValue) => {
+    if (endValue.diff(moment(), 'days') < 0) {
+      return true
+    }
+    return false
   }
 
   disabledStartDate = (endValue) => {
@@ -128,21 +135,22 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
     return endValue.diff(startValue, 'days') < 0;
   }
 
-  onFinish = (state) => {
-    const { fromDate, toDate } = state
+  handleChange = (value) => {
+    const startValue = value[0]
+    const endValue = value[1]
     const { onFinished } = this.props
     // Today's date isn't queried using /d, but everything else is.
-    const notToday = fromDate > +moment().endOf("day")
-                  || fromDate < +moment().startOf("day")
+    const notToday = startValue > +moment().endOf("day")
+                  || startValue < +moment().startOf("day")
     onFinished({
-      fromDate: notToday && (fromDate + "||/d") || +fromDate,
-      toDate: (toDate && (toDate + "||/d"))
+      fromDate: notToday && startValue.startOf("day") || startValue,
+      toDate: endValue && endValue.endOf("day")
     })
   }
 
   render() {
-    const { fromDate, toDate } = this.props
     const state = this.state;
+    const { fromDate, toDate, fromDateValue, toDateValue } = this.props
 
     const fromLabel = window.Drupal.t("From date");
     const toLabel = window.Drupal.t("To date");
@@ -151,10 +159,11 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
       <div>
         <Picker
           onOpenChange={this.onStartOpenChange}
-          type="start"
-          showValue={state.startValue}
           open={this.state.startOpen}
-          value={[state.startValue, state.endValue]}
+          type="start"
+          showValue={fromDateValue}
+          disabledDate={this.disabledPastDate}
+          value={[fromDate, toDate]}
           onChange={this.onStartChange}
           dateInputPlaceholder={fromLabel}
         />
@@ -162,9 +171,9 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
           onOpenChange={this.onEndOpenChange}
           open={this.state.endOpen}
           type="end"
-          showValue={state.endValue}
+          showValue={toDateValue}
           disabledDate={this.disabledStartDate}
-          value={[state.startValue, state.endValue]}
+          value={[fromDate, toDate]}
           onChange={this.onEndChange}
           dateInputPlaceholder={toLabel}
         />

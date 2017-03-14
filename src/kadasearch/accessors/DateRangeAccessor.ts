@@ -1,3 +1,6 @@
+import * as moment from "moment";
+
+import { get, identity } from "lodash"
 import {
   ObjectState,
   FilterBasedAccessor,
@@ -16,21 +19,19 @@ import { DateRangeQuery } from "../query/DateRangeQuery";
 
 import { createEventSortQuery } from '../EventSorting'
 
-const maxBy = require("lodash/maxBy")
-const get = require("lodash/get")
-const identity = require("lodash/identity")
 
 export interface DateRangeAccessorOptions {
   title:string
   id:string
-  fromDate:number | string
-  toDate:number | string
+  fromDate:moment.Moment
+  toDate:moment.Moment
   interval?: number
   fromDateField:string
   toDateField:string
   loadHistogram?:boolean
   fieldOptions?:FieldOptions
   rangeFormatter?:(count:number)=> number | string
+  onClearState?:(newValue?:any) => any
 }
 
 export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
@@ -45,21 +46,27 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
     this.options.fieldOptions = this.options.fieldOptions || { type:"embedded" }
     this.fieldContext = FieldContextFactory(this.options.fieldOptions)
     this.rangeFormatter = this.options.rangeFormatter || identity
+
+    const { fromDate, toDate } = options
+    this.state = this.state.setValue({
+      fromDate: fromDate || moment(),
+      toDate
+    })
   }
 
   clearState = () => {
-    this.state = this.state.clear()
-    console.log("State cleared")
+    // Need to pass state reset through parent component so view can be updated
+    this.options.onClearState()
   }
 
   buildSharedQuery(query) {
     if (this.state.hasValue()) {
       let val:any = this.state.getValue()
       let fromDateRangeFilter = this.fieldContext.wrapFilter(DateRangeQuery(this.options.fromDateField,{
-        lte: val.toDate
+        lte: +val.toDate
       }))
       let toDateRangeFilter = this.fieldContext.wrapFilter(DateRangeQuery(this.options.toDateField,{
-        gte: val.fromDate
+        gte: +val.fromDate
       }))
       const fromVal = this.rangeFormatter(val.fromDate);
       const toVal = this.rangeFormatter(val.toDate);
@@ -67,10 +74,10 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
         ? `${fromVal} – ${toVal}`
         : `${fromVal} –`
       let selectedFilter = {
-        name:this.translate(this.options.title),
+        name: this.translate(this.options.title),
         value: selectedFilterText,
-        id:this.options.id,
-        remove:this.clearState
+        id: this.options.id,
+        remove: this.clearState
       }
 
       return query
@@ -100,12 +107,12 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       otherFilters,
       this.fieldContext.wrapFilter(
         DateRangeQuery(this.options.fromDateField, {
-          lte: this.options.toDate
+          lte: +this.options.toDate
         })
       ),
       this.fieldContext.wrapFilter(
         DateRangeQuery(this.options.toDateField, {
-          gte: this.options.fromDate
+          gte: +this.options.fromDate
         })
       )
     ])
