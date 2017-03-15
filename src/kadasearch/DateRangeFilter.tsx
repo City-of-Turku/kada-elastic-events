@@ -139,7 +139,6 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
 
   calendarUpdate = (newValues) => {
     this.setCalendarState(newValues)
-    this.forceUpdate()
   }
 
   setCalendarState = (newValues) => {
@@ -148,6 +147,11 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     }
     else {
       this.accessor.state = this.accessor.state.setValue(newValues)
+    }
+
+    if (this.searchkit.results) {
+      this.searchkit.results.hits.ids = []
+      console.log("zeroed results", this.searchkit.results.hits)
     }
   }
 
@@ -176,12 +180,12 @@ export class DateRangeFilter extends SearchkitComponent<DateRangeFilterProps, an
     const state:{ fromDate?:string, toDate?:string } = this.accessor.state.getValue()
 
     return renderComponent(component, {
-      fromDate: state.fromDate,
-      toDate: state.toDate,
+      fromDate: state.fromDate || fromDate,
+      toDate: state.toDate || toDate,
       fromDateValue: get(state, "fromDate", fromDate),
       toDateValue: get(state, "toDate", toDate),
       items: this.accessor.getBuckets(),
-      onChange: this.setCalendarState,
+      onChange: this.calendarUpdate,
       onFinished: this.calendarUpdateAndSearch,
       rangeFormatter
     })

@@ -74,8 +74,6 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
     super(props)
     const { fromDate, toDate } = props
     this.state = {
-      startValue: fromDate || null,
-      endValue: toDate || null,
       startOpen: false,
       endOpen: false,
     }
@@ -139,7 +137,6 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
     const startValue = value[0]
     const endValue = value[1]
     const { onFinished } = this.props
-    // Today's date isn't queried using /d, but everything else is.
     const notToday = startValue > +moment().endOf("day")
                   || startValue < +moment().startOf("day")
     onFinished({

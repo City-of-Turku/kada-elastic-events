@@ -49,8 +49,8 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
 
     const { fromDate, toDate } = options
     this.state = this.state.setValue({
-      fromDate: fromDate || moment(),
-      toDate
+      fromDate: fromDate,
+      toDate: toDate
     })
   }
 
@@ -81,8 +81,8 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       }
 
       return query
-        .addFilter(this.key, fromDateRangeFilter)
-        .addFilter(this.key, toDateRangeFilter)
+        .addFilter(this.key+'_to', fromDateRangeFilter)
+        .addFilter(this.key+'_from', toDateRangeFilter)
         .addSelectedFilter(selectedFilter)
     }
 
@@ -108,20 +108,22 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
       otherFilters,
       this.fieldContext.wrapFilter(
         DateRangeQuery(this.options.fromDateField, {
-          lte: +this.options.toDate
+          lte: +val.toDate
         })
       ),
       this.fieldContext.wrapFilter(
         DateRangeQuery(this.options.toDateField, {
-          gte: +this.options.fromDate
+          gte: +val.fromDate
         })
       )
     ])
 
-    query = query.setAggs(FilterBucket(
-      this.key,
-      filters
-    ))
+    query = query.setAggs(
+      FilterBucket(
+        this.key,
+        filters
+      )
+    )
 
     query = query.setSort(
       createEventSortQuery(val.fromDate)
