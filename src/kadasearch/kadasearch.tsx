@@ -270,15 +270,6 @@ export class KadaSearch extends React.Component<any, any> {
                 />
 
                 <RefinementListFilter
-                  id="field_date_type"
-                  title={window.Drupal.t("Date type")}
-                  field="field_date_type"
-                  operator="AND"
-                  size={10}
-                  listComponent={ItemHistogramList}
-                />
-
-                <RefinementListFilter
                   id="event_types"
                   title={window.Drupal.t("What")}
                   field="field_event_types"

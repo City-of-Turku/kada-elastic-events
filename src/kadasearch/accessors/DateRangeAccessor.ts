@@ -102,6 +102,7 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
   }
 
   buildOwnQuery(query) {
+    let val:any = this.state.getValue()
     let otherFilters = query.getFiltersWithoutKeys(this.key)
     let filters = BoolMust([
       otherFilters,
@@ -123,7 +124,7 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
     ))
 
     query = query.setSort(
-      createEventSortQuery(this.options.fromDate)
+      createEventSortQuery(val.fromDate)
     )
 
     return query
