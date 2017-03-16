@@ -93,6 +93,7 @@ export class DateRangeCalendar extends SearchkitComponent<any, any> {
 
   onStartChange = (value) => {
     this.setState({
+      startValue: value[0],
       startOpen: false,
       endOpen: true,
     });

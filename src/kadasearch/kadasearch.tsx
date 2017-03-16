@@ -117,6 +117,7 @@ export class KadaSearch extends React.Component<any, any> {
                       path: 'field_event_date'
                     }
                   }}
+                  rangeFormatter={(v) => moment(parseInt(""+v)).format('D.M.YYYY')}
                 />
 
                 <HierarchicalRefinementFilter
@@ -169,7 +170,6 @@ export class KadaSearch extends React.Component<any, any> {
                     field="field_event_date_weekday"
                     orderKey="field_event_date_weekday.order"
                   />
-
 
                 </Panel>
 
@@ -263,13 +263,6 @@ export class KadaSearch extends React.Component<any, any> {
                   rangeFormatter={(v) => moment(parseInt(""+v)).format('D.M.YYYY')}
                 />
 
-                <HierarchicalRefinementFilter
-                  id="timeofday"
-                  title={window.Drupal.t("Time of day")}
-                  field="field_event_date_timeofday"
-                  orderKey="field_event_date_timeofday.order"
-                />
-
                 <RefinementListFilter
                   id="event_types"
                   title={window.Drupal.t("What")}
@@ -280,32 +273,36 @@ export class KadaSearch extends React.Component<any, any> {
                   listComponent={ItemHistogramList}
                 />
 
-                <RefinementListFilter
+                <RefinementWithText
                   id="target_audience"
                   title={window.Drupal.t("For whom")}
                   field="field_target_audience"
-                  operator="AND"
-                  size={10}
-                  containerComponent={CollapsedPanel}
+                  operator="OR"
                   listComponent={ItemHistogramList}
+                  description={window.Drupal.t("Select one or many")}
                 />
 
-                <RefinementListFilter
-                  id="district"
-                  title={window.Drupal.t("Where")}
-                  field="field_district"
-                  operator="AND"
-                  size={10}
-                  containerComponent={CollapsedPanel}
-                  listComponent={ItemHistogramList}
-                />
+                <Panel
+                  collapsable={true}
+                  defaultCollapsed={true}
+                  title={window.Drupal.t("Where")}>
+
+                  <RefinementListFilter
+                    id="district"
+                    title={window.Drupal.t("Write or search from dropdown")}
+                    field="field_district"
+                    operator="OR"
+                    listComponent={MultiSelect}
+                    size={100}
+                  />
+
+                </Panel>
 
                 <RefinementListFilter
-                  id="field_keywords_et"
-                  title={window.Drupal.t("Keywords")}
-                  field="field_keywords_et"
+                  id="hobby_details"
+                  title={window.Drupal.t("Fine down search")}
+                  field="hobby_details"
                   operator="AND"
-                  size={10}
                   containerComponent={CollapsedPanel}
                   listComponent={ItemHistogramList}
                 />
