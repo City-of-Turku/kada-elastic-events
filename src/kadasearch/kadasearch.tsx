@@ -209,7 +209,7 @@ export class KadaSearch extends React.Component<any, any> {
                       "title_field",
                       "field_lead_paragraph_et",
                     ]}
-                    scrollTo={false}
+                    scrollTo=".sk-layout"
                   />
                 </div>
 
@@ -334,7 +334,7 @@ export class KadaSearch extends React.Component<any, any> {
                       "title_field",
                       "field_lead_paragraph_et",
                     ]}
-                    scrollTo={false}
+                    scrollTo=".sk-layout"
                   />
                 </div>
 
