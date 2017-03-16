@@ -12,9 +12,9 @@ export function HitsScrollingPatch() {
       this.options.scrollTo.toString();
   };
   HitsAccessor.prototype.scrollIfNeeded = function () {
-    var searchkitOffset = offset(document.querySelector(this.getScrollSelector()))
-    if (this.searchkit.hasHitsChanged()) {
+    if (!this.searchkit.initialLoading && this.searchkit.hasHitsChanged()) {
       if (this.options.scrollTo) {
+        var searchkitOffset = offset(document.querySelector(this.getScrollSelector()))
         document.body.scrollTop = searchkitOffset.top;
       }
     }
