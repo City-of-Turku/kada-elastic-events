@@ -37,6 +37,18 @@ const EventListItem = (props) => {
   const title = (source.title_field) ? source.title_field : null;
   const leading = (source.field_lead_paragraph_et) ? source.field_lead_paragraph_et : null;
 
+  const place = (source.relation_place_service_node) ? (
+    <div className="event__place">
+      <ul className="links">
+        <li className="0 first last">
+          <a href={source.relation_place_service_node.url}>
+            {source.relation_place_service_node.title}
+          </a>
+        </li>
+      </ul>
+    </div>
+  ) : null;
+
   const dateVignette = (source.field_date_vignette) ? (
     <div className="date__vignette">{source.field_date_vignette}</div>
   ) : null;
@@ -45,6 +57,18 @@ const EventListItem = (props) => {
     <div className="event__date">
       {source.field_event_date_pretty}
       {dateVignette}
+    </div>
+  ) : null;
+
+  const signupBeforeLabel = window.Drupal.t("Last day to sign up");
+  const signupBefore = (source.field_last_day_to_sign_up_pretty) ? (
+    <div className="event__signup">
+      <div className="label-inline signup__label">
+        {signupBeforeLabel}
+      </div>
+      <span className="date-display-single">
+        {source.field_last_day_to_sign_up_pretty}
+      </span>
     </div>
   ) : null;
 
@@ -103,7 +127,9 @@ const EventListItem = (props) => {
         <h2 className="event__title">
           <a href={url} dangerouslySetInnerHTML={{__html:title}}></a>
         </h2>
+        {place}
         {prettyDates}
+        {signupBefore}
         <div className="event__leading" dangerouslySetInnerHTML={{__html:leading}}></div>
         {ticketsLink}
       </div>
