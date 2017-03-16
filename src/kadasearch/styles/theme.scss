@@ -84,8 +84,6 @@ body {
   margin:0 15px 15px;
 
   &-row {
-    display:flex;
-    flex-flow: row wrap;
     margin:0px 0 10px;
 
     &:last-child {
@@ -372,6 +370,37 @@ body {
 .sk-action-bar {
   .sk-select, .sk-toggle {
     margin-left:15px;
+  }
+
+  .sk-filter-groups {
+    display: block;
+  }
+
+  .sk-filter-group {
+    display: flex;
+    flex: 1 1 200px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  @include breakpoint('tablet') {
+    .sk-filter-group {
+      display: inline-block;
+    }
+  }
+
+  .sk-filter-group {
+    &__remove-action {
+      line-height: 2.6;
+    }
+  }
+
+  .sk-filter-group-items {
+    align-self: top;
+
+    &__title {
+      padding: 10px 0 0;
+    }
   }
 }
 
