@@ -19,14 +19,11 @@ import {
   SearchkitManager,
   NoHits,
   Pagination,
-  RangeFilter,
   ItemHistogramList,
   Layout, LayoutBody, LayoutResults,
-  RangeSliderHistogramInput,
   SideBar,
   Panel,
-  ActionBar, ActionBarRow,
-  TermQuery
+  ActionBar, ActionBarRow
 } from "searchkit";
 
 import HierarchicalRefinementFilter from './HierarchicalRefinementFilter'
