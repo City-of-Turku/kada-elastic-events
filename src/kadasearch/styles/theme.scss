@@ -343,12 +343,12 @@ body {
     &[data-key="previous"],
     &[data-key="next"],
     &.is-active {
-      display: initial;
+      display: block;
     }
 
     // Above tablet size, show full pager
     @include breakpoint('tablet') {
-      display: initial;
+      display: block;
     }
   }
 
