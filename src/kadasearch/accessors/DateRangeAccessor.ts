@@ -61,6 +61,28 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
     this.options.onClearState()
   }
 
+  fromQueryObject(ob){
+    let fromValue = ob[this.urlKey + '_from']
+    let toValue = ob[this.urlKey + '_to']
+
+    if (fromValue || toValue) {
+      this.state = this.state.setValue({
+        fromDate: fromValue && moment(+fromValue),
+        toDate: toValue && moment(+toValue)
+      })
+    }
+  }
+
+  getQueryObject(){
+    let val:any = this.state.getValue()
+    let fromDate = val.fromDate && +val.fromDate
+    let toDate = val.toDate && +val.toDate
+    return (val) ? {
+      [this.urlKey + '_from']:fromDate,
+      [this.urlKey + '_to']:toDate
+    } : {}
+  }
+
   buildSharedQuery(query) {
     if (this.state.hasValue()) {
       let val:any = this.state.getValue()
