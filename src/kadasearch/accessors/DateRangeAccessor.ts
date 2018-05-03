@@ -150,7 +150,6 @@ export class DateRangeAccessor extends FilterBasedAccessor<ObjectState> {
     )
 
     query = query.setSort([
-      {"hobby_details" : {"order" : "asc"}},
       createEventSortQuery(val.fromDate)
     ])
 
