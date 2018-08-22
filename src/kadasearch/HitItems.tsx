@@ -37,6 +37,18 @@ const EventListItem = (props) => {
   const title = (source.title_field) ? source.title_field : null;
   const leading = (source.field_lead_paragraph_et) ? source.field_lead_paragraph_et : null;
 
+  const superDates = (source.series_dates_to_event) ? (
+    <div className="event__superdate"><a href={url + '#quicktabs-series_events'}>Tapahtumasarja ({source.series_dates_to_event})</a></div>
+  ) : null;
+
+  const externalPlace = (source.series_dates_to_event) ? (
+    <div className="event__place">
+      <ul className="links">
+        <li>{source.field_external_place_event}</li>
+      </ul>
+    </div>
+  ) : null;
+
   const place = (source.relation_place_service_node) ? (
     <div className="event__place">
       <ul className="links">
@@ -128,7 +140,9 @@ const EventListItem = (props) => {
           <a href={url} dangerouslySetInnerHTML={{__html:title}}></a>
         </h2>
         {place}
+        {externalPlace}
         {prettyDates}
+        {superDates}
         {signupBefore}
         <div className="event__leading" dangerouslySetInnerHTML={{__html:leading}}></div>
         {ticketsLink}
